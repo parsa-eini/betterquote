@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BetterQuote - MVP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.23.1/antd.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dhurjati&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/4.23.1/antd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script>
+        function toggleBrokers() {
+            const brokerList = document.getElementById("broker-list");
+            if (brokerList.style.display === "none" || brokerList.style.display === "") {
+                brokerList.style.display = "block";
+            } else {
+                brokerList.style.display = "none";
+            }
+        }
+
+        function toggleCompanyList(id) {
+            const companyList = document.getElementById(id);
+            if (companyList.style.display === "none" || companyList.style.display === "") {
+                companyList.style.display = "block";
+            } else {
+                companyList.style.display = "none";
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: monospace;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            background-color: #0073e6;
+            color: white;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 5px;
+            font-weight: bold;
+        }
+
+        header nav a:hover {
+            text-decoration: underline;
+        }
+
+        .banner {
+            width: 100%;
+            height: 300px;
+            background: url('hero.jpg') no-repeat center center/cover;
+            opacity: 0.5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .section {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .core-values, .team {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            color: #0073e6;
+        }
+
+        .team img {
+            width: 100%;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .contact {
+            display: grid;
+            place-items: center;
+            gap: 10px;
+        }
+
+        .broker-section {
+            margin: 20px 0;
+        }
+
+        .broker-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border: 1px solid #d9d9d9;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Prevent items from spilling out */
+            box-sizing: border-box; /* Ensure padding and borders are included in width/height */
+        }
+
+        .broker-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            /*margin-right: 15px;*/
+        }
+
+        .broker-card .details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            gap: 5px;
+        }
+
+        .broker-card .companies {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0; /* Prevent items from shrinking and causing overflow */
+            overflow: hidden; /* Ensure the items don't go outside the container */
+            white-space: nowrap; /* Prevent wrapping of the companies' logos */
+        }
+
+        .broker-card .companies img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .broker-card button {
+            max-width: 100px; /* Prevent button from overflowing */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Add ellipsis if text is too long */
+        }
+
+        .company-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 15px;
+            border: 1px solid #d9d9d9;
+            border-radius: 10px;
+            /*margin: 10px 0;*/
+            background-color: #e9e9e9;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .company-card img {
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        footer {
+            background-color: #222;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        footer span {
+            color: #0073e6;
+        }
+
+        button {
+            border: none;
+            background-color: #0073e6;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #005bb5;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <!--        <div>BetterQuote</div>-->
+        <div>
+            <a href="#core-values">Values</a>
+            <a href="#team">Team</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+</header>
+
+<div id="banner" class="banner">
+</div>
+
+<section id="core-values" class="section core-values" style="background-color: #f0fdff">
+    <h2>Our Core Values</h2>
+    <div class="core-values">
+        <div class="card">
+            <h3>Customized Quotes</h3>
+            <p>Tailored insurance plans to fit your needs.</p>
+        </div>
+        <div class="card">
+            <h3>Best Broker Suggestions</h3>
+            <p>We connect you with the top brokers in the industry.</p>
+        </div>
+        <div class="card">
+            <h3>Live Agents</h3>
+            <p>Always ready to assist you in real-time.</p>
+        </div>
+    </div>
+</section>
+
+<section id="team" class="section team">
+    <h2>Meet Our Team</h2>
+    <div class="team">
+        <div class="card">
+            <img src="moein.jpg" alt="Co-founder 1">
+            <h3>Moein Nickpour</h3>
+            <p>Chief growth and Marketing officer</p>
+        </div>
+        <div class="card">
+            <img src="parsa.jpg" alt="Co-founder 2">
+            <h3>Parsa Eini</h3>
+            <p>Software Engineer</p>
+        </div>
+    </div>
+</section>
+
+<section id="broker" class="section broker-section">
+    <button onclick="toggleBrokers()"
+            style="width: 100%; margin-bottom: 20px; color: white; background-color: gold; font-weight: bold">
+        BROKERS
+    </button>
+    <div id="broker-list" style="display: none;">
+        <div class="broker-card" onclick="toggleCompanyList('company-list-1')">
+            <div>
+                <img src="company1.jpg" alt="Broker">
+                <br>
+                <span>Viva</span>
+            </div>
+            <div>
+                <strong>4.0</strong><br><small style="color: gray">(526 reviews)</small>
+                <br>
+                <span style="color: #fadb14;">★★★★</span><span style="color: gray;">★</span>
+            </div>
+            <div>$785 - $1130</div>
+        </div>
+        <div id="company-list-1" style="display: none; ">
+            <div class="company-card">
+                <img src="company6.png" alt="Company Logo">
+                <div>Company 1</div>
+                <div>$785/month</div>
+            </div>
+            <div class="company-card">
+                <img src="company7.png" alt="Company Logo">
+                <div>Company 2</div>
+                <div>$850/month</div>
+            </div>
+            <div class="company-card">
+                <img src="company8.png" alt="Company Logo">
+                <div>Company 3</div>
+                <div>$900/month</div>
+            </div>
+            <div class="company-card">
+                <img src="company10.png" alt="Company Logo">
+                <div>Company 4</div>
+                <div>$1000/month</div>
+            </div>
+            <div class="company-card" style="margin-bottom: 25px">
+                <img src="company11.jpg" alt="Company Logo">
+                <div>Company 5</div>
+                <div>$1130/month</div>
+            </div>
+        </div>
+
+
+        <div class="broker-card" onclick="toggleCompanyList('company-list-2')">
+            <div>
+                <img src="company2.jpg" alt="Broker">
+                <br>
+                <span>TopEagle</span>
+            </div>
+            <div>
+                <strong>5.0</strong><br><small style="color: gray">(1078 reviews)</small>
+                <br>
+                <span style="color: #fadb14;">★★★★★</span>
+            </div>
+            <div>$820 - $1359</div>
+        </div>
+        <div id="company-list-2" style="display: none; ">
+            <div class="company-card">
+                <img src="company6.png" alt="Company Logo">
+                <div>Company 1</div>
+                <div>$820/month</div>
+            </div>
+            <div class="company-card">
+                <img src="company7.png" alt="Company Logo">
+                <div>Company 2</div>
+                <div>$965/month</div>
+            </div>
+            <div class="company-card">
+                <img src="company8.png" alt="Company Logo">
+                <div>Company 3</div>
+                <div>$990/month</div>
+            </div>
+            <div class="company-card">
+                <img src="company10.png" alt="Company Logo">
+                <div>Company 4</div>
+                <div>$1010/month</div>
+            </div>
+            <div class="company-card">
+                <img src="company11.jpg" alt="Company Logo">
+                <div>Company 5</div>
+                <div>$1270/month</div>
+            </div>
+            <div class="company-card" style="margin-bottom: 25px">
+                <img src="company1.jpg" alt="Company Logo">
+                <div>Company 6</div>
+                <div>$1359/month</div>
+            </div>
+        </div>
+
+        <div class="broker-card" onclick="toggleCompanyList('company-list-3')">
+            <div>
+                <img src="company3.png" alt="Broker">
+                <br>
+                <span>Supporter</span>
+            </div>
+            <div>
+                <strong>3.0</strong><br><small style="color: gray">(907 reviews)</small>
+                <br>
+                <span style="color: #fadb14;">★★★</span><span style="color: gray;">★★</span>
+            </div>
+            <div>$683 - $1790</div>
+        </div>
+        <div id="company-list-3" style="display: none; ">
+            <div class="company-card">
+                <img src="company11.jpg" alt="Company Logo">
+                <div>Company 1</div>
+                <div>$683/month</div>
+            </div>
+            <div class="company-card">
+                <img src="company10.png" alt="Company Logo">
+                <div>Company 2</div>
+                <div>$999/month</div>
+            </div>
+            <div class="company-card">
+                <img src="company8.png" alt="Company Logo">
+                <div>Company 3</div>
+                <div>$1252/month</div>
+            </div>
+            <div class="company-card">
+                <img src="company7.png" alt="Company Logo">
+                <div>Company 4</div>
+                <div>$1580/month</div>
+            </div>
+            <div class="company-card" style="margin-bottom: 25px">
+                <img src="company6.png" alt="Company Logo">
+                <div>Company 5</div>
+                <div>$1790/month</div>
+            </div>
+        </div>
+
+        <div class="broker-card" onclick="toggleCompanyList('company-list-4')">
+            <div>
+                <img src="company4.png" alt="Broker">
+                <br>
+                <span>Universal</span>
+            </div>
+            <div>
+                <strong>4.0</strong><br><small style="color: gray">(488 reviews)</small>
+                <br>
+                <span style="color: #fadb14;">★★★★</span><span style="color: gray;">★</span>
+            </div>
+            <div>$930 - $1150</div>
+        </div>
+        <div id="company-list-4" style="display: none; ">
+            <div class="company-card">
+                <img src="company6.png" alt="Company Logo">
+                <div>Company 1</div>
+                <div>$930/month</div>
+            </div>
+            <div class="company-card">
+                <img src="company7.png" alt="Company Logo">
+                <div>Company 2</div>
+                <div>$975/month</div>
+            </div>
+            <div class="company-card">
+                <img src="company8.png" alt="Company Logo">
+                <div>Company 3</div>
+                <div>$980/month</div>
+            </div>
+            <div class="company-card" style="margin-bottom: 25px">
+                <img src="company11.jpg" alt="Company Logo">
+                <div>Company 4</div>
+                <div>$1150/month</div>
+            </div>
+        </div>
+
+        <div class="broker-card" onclick="toggleCompanyList('company-list-5')">
+            <div>
+                <img src="company5.png" alt="Broker">
+                <br>
+                <span>CarSpot</span>
+            </div>
+            <div>
+                <strong>2.0</strong><br><small style="color: gray">(97 reviews)</small>
+                <br>
+                <span style="color: #fadb14;">★★</span><span style="color: gray;">★★★</span>
+            </div>
+            <div>$560 - $1050</div>
+        </div>
+        <div id="company-list-5" style="display: none; ">
+            <div class="company-card">
+                <img src="company8.png" alt="Company Logo">
+                <div>Company 1</div>
+                <div>$560/month</div>
+            </div>
+            <div class="company-card">
+                <img src="company11.jpg" alt="Company Logo">
+                <div>Company 2</div>
+                <div>$890/month</div>
+            </div>
+            <div class="company-card" style="margin-bottom: 25px">
+                <img src="company7.png" alt="Company Logo">
+                <div>Company 3</div>
+                <div>$1050/month</div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section id="contact" class="section contact" style="background-color: #f0fdff">
+    <h2>Contact Us</h2>
+    <p>Email: nikpourmoein.work@gmail.com</p>
+    <p>Email: parsaeini1998@gmail.com</p>
+</section>
+
+<footer>
+    <p>&copy; <span>BetterQuote</span>. All rights reserved
+    </p>
+</footer>
